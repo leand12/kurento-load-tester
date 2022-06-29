@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  selenium:
+    # image: selenium/standalone-firefox-debug
+    image: selenium/standalone-firefox
+    shm_size: '2g'
+    ports:
+      - 4444:4444
+      # - 5900:5900
+    environment:
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - 8443:8443
+  test:
+    build:
+      context: test
+      dockerfile: Dockerfile
+    depends_on:
+      - selenium
+      - client
